@@ -1,0 +1,5 @@
+git_assistant.ipynb
+.streamlit/secrets.toml
+__pycache__
+rsc/img/background.pptx
+files.pickle
