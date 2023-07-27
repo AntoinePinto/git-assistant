@@ -1,0 +1,5 @@
+numpy==1.24.4
+openai==0.27.7
+streamlit==1.24.1
+pillow==9.5.0
+git+https://github.com/AntoinePinto/easy-environment.git
