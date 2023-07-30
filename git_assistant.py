@@ -20,7 +20,7 @@ streamlit_utils.config_page_appearance(layout='centered')
 if 'writer' not in st.session_state:
     ## Defining LLM writer
     streamlit_utils.openai_config('ChatGPT')
-    st.session_state['writer'] = llm.ChatGPT(model="standard-gpt-35-turbo", azure_engine=True)
+    st.session_state['writer'] = llm.ChatGPT(model="gpt-3.5-turbo-16k")
     st.session_state['expander_structure'] = True
     st.session_state['appli'] = None
     st.session_state["action"] = None
@@ -127,18 +127,9 @@ def generate_readme_structure():
         Return only the JSON format.
         """
 
-        st.session_state['writer'].messages = [{'role': 'system', 'content': CONTEXT},
-                        {'role': 'user', 'content': PROMPT}]
+        st.session_state['writer'].define_context(context=CONTEXT)
 
-        completion = openai.ChatCompletion.create(
-                        messages=st.session_state['writer'].messages,
-                        engine=st.session_state['writer'].model,
-                        max_tokens=512,
-                        temperature=0.7,
-                        top_p=1,
-                        request_timeout=60)
-
-        structure_str = completion.choices[0]['message']['content']
+        structure_str = st.session_state['writer'].ask(message=PROMPT, temperature=0.7, request_timeout=60)
 
         st.session_state['files']['structure'] = json.loads(structure_str)
 
@@ -171,18 +162,10 @@ def generate_readme():
     ```
     {st.session_state['files']['files_description_concat']}
     ```"""
-    st.session_state['writer'].messages = [{'role': 'system', 'content': CONTEXT},
-                                        {'role': 'user', 'content': PROMPT}]
-    
-    completion = openai.ChatCompletion.create(
-                        messages=st.session_state['writer'].messages,
-                        engine=st.session_state['writer'].model,
-                        max_tokens=3000,
-                        temperature=0.7,
-                        top_p=1,
-                        request_timeout=60)
-    
-    st.session_state['response'] = completion.choices[0]['message']['content']
+
+    st.session_state['writer'].define_context(context=CONTEXT)
+
+    st.session_state['response'] = st.session_state['writer'].ask(message=PROMPT, max_tokens=3000, temperature=0.7, request_timeout=60)
 
 col0, col1, col2 = st.columns([0.5, 1, 0.5])
 with col1:

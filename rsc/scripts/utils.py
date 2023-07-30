@@ -2,6 +2,7 @@ import os
 
 import numpy as np
 import openai
+import streamlit as st
 
 def get_files_content(folder):
 
@@ -49,18 +50,9 @@ def get_repo_detailed_description(files_description_concat, writer):
     ```
     """
 
-    writer.messages = [{'role': 'system', 'content': CONTEXT},
-                    {'role': 'user', 'content': PROMPT}]
+    st.session_state['writer'].define_context(context=CONTEXT)
 
-    completion = openai.ChatCompletion.create(
-                    messages=writer.messages,
-                    engine=writer.model,
-                    max_tokens=3000,
-                    temperature=0.5,
-                    top_p=1,
-                    request_timeout=60)
-
-    desc = completion.choices[0]['message']['content']
+    desc = st.session_state['writer'].ask(message=PROMPT, max_tokens=3000, temperature=0.5, request_timeout=60)
 
     return desc
 

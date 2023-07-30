@@ -82,7 +82,7 @@ def openai_config(application):
         else:
             pass
 
-        openai.api_base = "https://azure-openai-fr.openai.azure.com/"
+        # openai.api_base = "https://azure-openai-fr.openai.azure.com/"
 
     elif application == "embedding":
 
@@ -91,10 +91,10 @@ def openai_config(application):
         else:
             pass
 
-        openai.api_base = "https://equancy-indexing.openai.azure.com/"
+        # openai.api_base = "https://equancy-indexing.openai.azure.com/"
 
-    openai.api_type = 'azure'
-    openai.api_version = '2023-05-15'
+    # openai.api_type = 'azure'
+    # openai.api_version = '2023-05-15'
 
 def check_url_token():
     url_params = st.experimental_get_query_params()
