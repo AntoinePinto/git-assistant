@@ -28,11 +28,11 @@ if 'writer' not in st.session_state:
 def understand_repo():
     
     with st.spinner('...'):
-        if not os.path.exists(REPO_TITLE):
+        if not os.path.exists(st.session_state['REPO_TITLE']):
             subprocess.run(["git", "clone", repo_url], check=True, capture_output=True, text=True)
 
     # GET FILES CONTENT
-    st.session_state['files'] = {'content': utils.get_files_content(folder=REPO_TITLE)}
+    st.session_state['files'] = {'content': utils.get_files_content(folder=st.session_state['REPO_TITLE'])}
 
     # GET FILES DESCRIPTION
 
@@ -175,7 +175,7 @@ a, b, c = st.columns([0.000001, 1, 0.000001])
 with b:
     with st.expander(label='GitHub Repository URL', expanded=True):
         repo_url = st.text_input("GitHub Repository URL", label_visibility='collapsed')
-        REPO_TITLE = repo_url.split('/')[-1]
+        st.session_state['REPO_TITLE'] = repo_url.split('/')[-1]
         submit_github_url = st.button('Submit')
 
     if submit_github_url:
