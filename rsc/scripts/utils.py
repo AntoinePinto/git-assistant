@@ -12,6 +12,7 @@ def get_files_content(folder):
             ignored = f.read().split('\n')
     else:
         ignored = []
+    ignored = [i for i in ignored if i != ""]
 
     files_content = {}
     for root, _, filenames in os.walk(f"{folder}"):
