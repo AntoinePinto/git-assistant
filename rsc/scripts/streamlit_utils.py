@@ -8,7 +8,7 @@ import openai
 
 from PIL import Image
 
-from easy_env import EasyEnvironment
+from easyenvi import EasyEnvironment
 
 def add_local_background(image_file):
 
