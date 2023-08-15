@@ -1,3 +1,4 @@
+import os
 import time
 from datetime import datetime
 
@@ -6,6 +7,12 @@ import openai
 # from vertexai.preview.language_models import TextGenerationModel
 
 #---------------------------------------------------------------------------------------------#
+
+def set_openai_environment(application):
+    openai.api_key = os.getenv(f"api_key_{application}")
+    openai.api_base = os.getenv(f"api_base_{application}")
+    openai.api_type = os.getenv(f"api_type_{application}")
+    openai.api_version = os.getenv(f"api_version_{application}")
 
 class ChatGPT:
 
@@ -25,30 +32,33 @@ class ChatGPT:
         for shot in shots:
             self.messages.extend([{"role": k, "content" : v} for k, v in shot.items()])
 
-    def ask(self, message, max_tokens=512, temperature=1, top_p=1, request_timeout=100):
+    def ask(self, message, max_tokens=512, temperature=1, top_p=1, request_timeout=100, sleep_timeout=10):
+
+        set_openai_environment("CHAT_GPT")
 
         self.messages.append({"role": "user", "content" : message})
 
         while (datetime.now() - self.last_call).seconds < self.call_time_interval:
             time.sleep(2)
 
+        args = {
+            'messages': self.messages,
+            'max_tokens': max_tokens,
+            'temperature': temperature,
+            'top_p': top_p,
+            'request_timeout': request_timeout
+        }
+
         if self.azure_engine is True:
-            completion = openai.ChatCompletion.create(
-                messages=self.messages,
-                engine=self.model,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                request_timeout=request_timeout)
-            
+            args['engine'] = self.model            
         else:
-            completion = openai.ChatCompletion.create(
-                messages=self.messages,
-                model=self.model,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                request_timeout=request_timeout)
+            args['model'] = self.model  
+        
+        try:
+            completion = openai.ChatCompletion.create(**args)
+        except:
+            time.sleep(sleep_timeout)
+            completion = openai.ChatCompletion.create(**args)
 
         self.last_call = datetime.now()
 

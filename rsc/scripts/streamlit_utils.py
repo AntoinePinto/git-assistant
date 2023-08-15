@@ -47,15 +47,10 @@ def hide_header_footer():
 
 def initialize_session_state():
 
-    if 'env' not in st.session_state:
+    if 'img' not in st.session_state:
 
         if not check_password():
-            import sys
             sys.exit()
-
-        st.session_state['env'] = EasyEnvironment(
-            local_path=''
-        )
 
         st.session_state['img'] = {
             'tab_logo': 'rsc/img/tab_logo.png',
@@ -66,35 +61,21 @@ def initialize_session_state():
 
 def config_page_appearance(header=None, layout='wide'):
     st.set_page_config(page_title="Git Assistant", page_icon = Image.open(st.session_state['img']['tab_logo']), layout=layout)
-    # hide_header_footer()
     add_local_background(st.session_state['img']['background'])
 
     if header is not None:
         st.markdown(f"""<p style="color:#004489;font-size:48px;">{header}</p>""",
                 unsafe_allow_html=True)
         
-def openai_config(application):
+def openai_config(application, provider):
 
-    if application == "ChatGPT":
+    if os.path.exists('.streamlit/secrets.toml'):
+        secrets = st.secrets["OPEN_AI"][provider][application]
 
-        if os.path.exists('.streamlit/secrets.toml'):
-            openai.api_key = st.secrets["OPEN_AI"]['token_gpt']
-        else:
-            pass
-
-        # openai.api_base = "https://azure-openai-fr.openai.azure.com/"
-
-    elif application == "embedding":
-
-        if os.path.exists('.streamlit/secrets.toml'):
-            openai.api_key = st.secrets["OPEN_AI"]['token_index']
-        else:
-            pass
-
-        # openai.api_base = "https://equancy-indexing.openai.azure.com/"
-
-    # openai.api_type = 'azure'
-    # openai.api_version = '2023-05-15'
+    openai.api_key = secrets['api_key']
+    openai.api_base = secrets['api_base']
+    openai.api_type = secrets['api_type']
+    openai.api_version = secrets['api_version']
 
 def check_url_token():
     url_params = st.experimental_get_query_params()
