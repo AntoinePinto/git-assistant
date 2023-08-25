@@ -1,9 +1,19 @@
-git_assistant.ipynb
+# credentials
 .streamlit/secrets.toml
+
+# environment
+venv
+
+# py
 __pycache__
+
+# images
 rsc/img/background.pptx
-files.pickle
+
+# dist
+build
+git_assistant.egg-info
+
+git_assistant.ipynb
 business.docx
-git_assistant
 trash
-setup.py
