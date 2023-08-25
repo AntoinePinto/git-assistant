@@ -1,3 +1,4 @@
+import git
 import json
 import os
 import subprocess
@@ -80,8 +81,9 @@ class git_assistant:
                         self.files['content'][path] = text_content(path, file_max_nb_char)
 
         else:
-
-            filenames = subprocess.check_output("git ls-files", shell=True).splitlines()
+            repo = git.Repo('.')
+            filenames = repo.git.ls_files().splitlines()
+            # filenames = subprocess.check_output("git ls-files", shell=True).splitlines()
             for filename in filenames:
                 self.files['content'][filename] = text_content(filename, file_max_nb_char)
 
