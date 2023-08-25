@@ -8,7 +8,6 @@ from tqdm import tqdm
 
 import nbformat
 import numpy as np
-import tiktoken
 
 from nbconvert import PythonExporter
 
@@ -54,7 +53,6 @@ class git_assistant:
         self.writer = writer
 
         self.tqdm = progress_bar_func
-        self.tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
     def clone_repository(self):
         if not os.path.exists(self.folder):

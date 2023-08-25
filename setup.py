@@ -11,6 +11,6 @@ setup(
             "git-assistant = git_assistant:main"
         ]
     },
-    install_requires=["pwinput", "easyenvi", "nbformat", "nbconvert"
+    install_requires=["pwinput", "easyenvi", "nbformat", "nbconvert", "openai", "GitPython"
     ],
 )
