@@ -4,9 +4,6 @@ venv
 # py
 __pycache__
 
-# images
-rsc/img/background.pptx
-
 # dist
 build
 git_assistant.egg-info
