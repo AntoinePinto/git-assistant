@@ -47,6 +47,7 @@ class git_assistant:
         
         if repo_url is not None:
             self.folder = repo_url.split('/')[-1]
+            self.clone_repository()
         else:
             self.folder = folder
 
