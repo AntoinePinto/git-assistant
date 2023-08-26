@@ -18,6 +18,7 @@ git_assistant.egg-info
 git_assistant.py
 rsc
 .streamlit
+requirements.txt
 
 git_assistant.ipynb
 business.docx
