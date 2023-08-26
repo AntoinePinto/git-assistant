@@ -14,6 +14,11 @@ rsc/img/background.pptx
 build
 git_assistant.egg-info
 
+# streamlit app
+git_assistant.py
+rsc
+.streamlit
+
 git_assistant.ipynb
 business.docx
 trash
