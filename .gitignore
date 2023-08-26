@@ -13,6 +13,7 @@ rsc/img/background.pptx
 # dist
 build
 git_assistant.egg-info
+setup.py
 
 git_assistant.ipynb
 business.docx

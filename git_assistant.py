@@ -1,74 +1,3 @@
-
-# import sys
-# import logging
-# import time
-# import streamlit as st
-# from tqdm import tqdm
-
-# # Configurez le niveau de journalisation
-# logging.basicConfig(level=logging.INFO)
-
-# # Créer un format de journalisation
-# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-# # Créer un gestionnaire de journalisation pour afficher les messages en console
-# console_handler = logging.StreamHandler(sys.stdout)
-# console_handler.setFormatter(formatter)
-
-# # Ajouter le gestionnaire de journalisation à root logger
-# logging.getLogger('').addHandler(console_handler)
-
-# def my_func():
-#     for i in stqdm(range(5), desc="Progression", unit="étape"):
-#         time.sleep(1)
-#         logging.info("Ceci est un avertissement depuis my_func")
-
-# st.title("Affichage des informations de journalisation dans Streamlit")
-
-# with st.spinner('En cours...'):
-#     my_func()
-
-# sys.exit()
-# from logging import _Level
-# import sys
-# import logging
-# import streamlit as st
-
-# # Configurez le niveau de journalisation
-# logging.basicConfig(level=logging.INFO)
-
-
-
-# # Redirigez les messages de journalisation vers le flux de sortie de Streamlit
-# class StreamlitHandler(logging.Handler):
-    
-#     def __init__(self):
-#         self.info = st.empty()
-    
-#     def emit(self, record):
-#         msg = self.format(record)
-#         self.info.empty()
-#         self.info = st.markdown(f"<i>{msg}</i>", unsafe_allow_html=True)
-#         self.flush()
-
-# # Ajoutez le gestionnaire de journalisation personnalisé à la liste des gestionnaires
-# logging.getLogger().addHandler(StreamlitHandler())
-
-
-# def my_func():
-#     import time
-#     # Votre code ici
-#     for i in range(5):
-#         time.sleep(1)
-#         logging.info("Ceci est un avertissement depuis my_func")
-
-# with st.spinner('...'):
-#     my_func()
-
-
-
-# sys.exit()
-
 import os
 import sys
 
@@ -76,10 +5,12 @@ import streamlit as st
 
 from stqdm import stqdm
 
-sys.path.append('rsc/scripts')
-import streamlit_utils
+sys.path.append('git_assistant')
 import llm
 from git_utils import git_assistant
+
+sys.path.append('rsc/scripts')
+import streamlit_utils
 
 # Initialisation
 streamlit_utils.initialize_session_state()
@@ -87,14 +18,12 @@ streamlit_utils.config_page_appearance(layout='centered')
 
 if 'writer' not in st.session_state:
     ## Defining LLM writer
-    provider = "PERSO"
-
+    provider = "VA"
     for k, v in st.secrets['OPEN_AI'][provider].items():
         os.environ[k] = v
-    
-    azure_engine = st.secrets['OPEN_AI'][provider]['api_type_CHAT_GPT'] == "azure"
+    llm.set_openai_environment('CHAT_GPT')
+    st.session_state['writer'] = llm.ChatGPT(model=os.getenv('engine_CHAT_GPT'), azure_engine=True)
 
-    st.session_state['writer'] = llm.ChatGPT(model=os.getenv("engine_CHAT_GPT"), azure_engine=azure_engine)
     st.session_state['expander_structure'] = True
 
 col0, col1, col2 = st.columns([0.5, 1, 0.5])
@@ -108,10 +37,8 @@ with st.expander(label='GitHub Repository URL', expanded=True):
 
 if submit_github_url:
     with st.spinner('...'):
-        st.session_state['gitty'] = git_assistant(repo_url=repo_url, writer=st.session_state['writer'], progress_bar_func=stqdm)
-        st.session_state['gitty'].clone_repository()
-        st.session_state['gitty'].get_files_content()
-        st.session_state['gitty'].get_summary_concat(max_len_summary_concat=14000)
+        st.session_state['gitty'] = git_assistant(repo_url=repo_url, folder=".", writer=st.session_state['writer'], progress_bar_func=stqdm)
+        st.session_state['gitty'].initialise(max_token=16000)
         st.session_state['gitty'].get_global_summary()
 
 if (application == "README Generator") & ("gitty" in st.session_state):
@@ -137,7 +64,7 @@ if (application == "README Generator") & ("gitty" in st.session_state):
                 gen_readme_content = st.button("Generate/Re-Generate README Content")
                 if gen_readme_content:
                     with st.spinner('...'):
-                        st.session_state['readme'] = st.session_state['gitty'].generate_readme()
+                        st.session_state['readme'] = st.session_state['gitty'].generate_readme(max_token=16000)
 
             if "readme" in st.session_state:
                 col0, col1, col2 = st.columns([0.5, 1, 0.5])
