@@ -18,11 +18,11 @@ streamlit_utils.config_page_appearance(layout='centered')
 
 if 'writer' not in st.session_state:
     ## Defining LLM writer
-    provider = "VA"
+    provider = "PERSO"
     for k, v in st.secrets['OPEN_AI'][provider].items():
         os.environ[k] = v
     llm.set_openai_environment('CHAT_GPT')
-    st.session_state['writer'] = llm.ChatGPT(model=os.getenv('engine_CHAT_GPT'), azure_engine=True)
+    st.session_state['writer'] = llm.ChatGPT(model=os.getenv('engine_CHAT_GPT'), azure_engine=False)
 
     st.session_state['expander_structure'] = True
 
