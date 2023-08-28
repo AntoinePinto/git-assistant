@@ -47,6 +47,7 @@ class git_assistant:
         
         if repo_url is not None:
             self.folder = repo_url.split('/')[-1]
+            self.clone_repository()
         else:
             self.folder = folder
 
@@ -79,7 +80,7 @@ class git_assistant:
                         self.files['content'][path] = text_content(path, file_max_nb_char)
 
         else:
-            repo = git.Repo('.')
+            repo = git.Repo(folder)
             filenames = repo.git.ls_files().splitlines()
             # filenames = subprocess.check_output("git ls-files", shell=True).splitlines()
             for filename in filenames:
