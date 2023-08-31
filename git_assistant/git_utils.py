@@ -11,6 +11,13 @@ import numpy as np
 
 from nbconvert import PythonExporter
 
+def is_git_repo(path):
+    try:
+        git.Repo(path)
+        return True
+    except:
+        return False
+
 def round_10(v):
     return int((v + 5) // 10 * 10)
 
@@ -50,6 +57,8 @@ class git_assistant:
             self.clone_repository()
         else:
             self.folder = folder
+            if not is_git_repo(folder):
+                raise "You are not in the root of a .git repository."
 
         self.writer = writer
 
@@ -59,9 +68,9 @@ class git_assistant:
         if not os.path.exists(self.folder):
             subprocess.run(["git", "clone", self.repo_url], check=True, capture_output=True, text=True)
 
-    def get_files_content(self, file_max_nb_char=50000):
+    def get_files_content(self, file_max_nb_char=30000, n_max_file=30):
 
-        self.files = {'content': {}}
+        list_filenames = []
         if self.repo_url is not None:
 
             # List ignored files if exists
@@ -77,23 +86,30 @@ class git_assistant:
                     path = os.path.join(root, filename).replace("\\", "/")
                     is_ignored = np.sum([path.startswith(f) for f in ignored]) > 0
                     if (not path.startswith(f"{self.folder}/.git")) & (not is_ignored):
-                        self.files['content'][path] = text_content(path, file_max_nb_char)
+                        list_filenames.append(path)
 
         else:
-            repo = git.Repo(folder)
+            repo = git.Repo('.')
             filenames = repo.git.ls_files().splitlines()
             # filenames = subprocess.check_output("git ls-files", shell=True).splitlines()
             for filename in filenames:
-                self.files['content'][filename] = text_content(filename, file_max_nb_char)
+                list_filenames.append(filename)
+
+        if len(list_filenames) > n_max_file:
+            return f"This repository contains too many files ({len(list_filenames)} readable files). To avoid exceeding the tool's expenditure, please use a smaller repository."
+        
+        if len(list_filenames) == 0:
+            return "There is no easy-readable file (convertible to text) in this repository"
+
+        self.files = {'content': {}}
+        for filename in list_filenames:
+            self.files['content'][filename] = text_content(filename, file_max_nb_char)
 
     def initialise(self,
-                   file_max_nb_char=50000,
                    max_token=4000,
                    min_len_summary = 50,
                    context="You are a powerful Git assistant that explain how a specific files works. You give informations that the user will use to create a README file.",
                    prompt_template="File content: ```{content}```\n\nWrite a description of this file with maximum {max_word} words."):
-
-        self.get_files_content(file_max_nb_char=file_max_nb_char)
 
         len_total = np.sum([len(v) for k, v in self.files['content'].items()])
         
@@ -175,6 +191,7 @@ class git_assistant:
 
         import copy
         self.chatbot = copy.deepcopy(self.writer)
+        self.chatbot.total_cost = 0
         
         context = context_template.format(summary_concat=self.summary_concat)
         self.chatbot.define_context(context=context)
