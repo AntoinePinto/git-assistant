@@ -49,8 +49,8 @@ def initialize_session_state():
 
     if 'img' not in st.session_state:
 
-        # if not check_password():
-        #     sys.exit()
+        if not check_password():
+            sys.exit()
 
         st.session_state['img'] = {
             'tab_logo': 'rsc/img/tab_logo.png',
