@@ -97,9 +97,9 @@ class ChatGPT:
         self.answer = completion.choices[0]['message']['content']
         self.messages.append({"role": "assistant", "content" : self.answer})
 
-        # usage = completion['usage']
-        # cost = usage['total_tokens']*0.002/1000
-        # self.total_cost += cost
+        usage = completion['usage']
+        cost = usage['total_tokens']*0.002/1000
+        self.total_cost += cost
         # print(f"Cost: ${cost} - Total cost: ${self.total_cost}")
 
         return self.answer
