@@ -7,9 +7,13 @@ Git Assistant is a tool harnessing the power of generative AI to assist Git user
 
 ## Web Interface
 
-Access to the git-assistant web interface: [https://git-assistant.streamlit.app/](https://git-assistant.streamlit.app/)
+Access to the git-assistant web interface: https://git-assistant.streamlit.app/
+
+https://github.com/AntoinePinto/git-assistant/assets/76919407/dd16f1d1-3066-49d3-947f-775af0819195
 
 ## Command line Interface
+
+With command line interface, you need to specify you OpenAI API token. Tutorial to get your free API token : https://www.youtube.com/watch?v=EQQjdwdVQ-M"
 
 ### Installation
 
@@ -50,6 +54,7 @@ git-assistant chatbot --repo_url=https://github.com/AntoinePinto/easyenvi
 ## Specify GPT model
 
 To select a specific GPT model, utilize the `gpt_model`` parameter. For example:
+
 ```
 git-assistant generate-readme --gpt_model=gpt-4-0613
 ```
