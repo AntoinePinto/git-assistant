@@ -49,8 +49,8 @@ def initialize_session_state():
 
     if 'img' not in st.session_state:
 
-        if not check_password():
-            sys.exit()
+        # if not check_password():
+        #     sys.exit()
 
         st.session_state['img'] = {
             'tab_logo': 'rsc/img/tab_logo.png',
@@ -59,13 +59,28 @@ def initialize_session_state():
             'user': '👤'
         }
 
+        with open('rsc/credentials/GCP_credentials.json', 'w') as fp:
+            json.dump(dict(st.secrets["GOOGLE_APPLICATION_CREDENTIALS"]), fp)
+
+
+        st.session_state['envi'] = EasyEnvironment(
+            local_path='',
+            
+            gcloud_project_id='my-gcp-project-387112',
+            gcloud_credential_path="rsc/credentials/GCP_credentials.json",
+            GCS_path='gs://my-gcp-project-gcs-bucket/git-assistant/'
+        )
+
+
+
+
 def config_page_appearance(header=None, layout='wide'):
     st.set_page_config(page_title="Git Assistant", page_icon = Image.open(st.session_state['img']['tab_logo']), layout=layout)
     add_local_background(st.session_state['img']['background'])
 
     if header is not None:
-        st.markdown(f"""<p style="color:#004489;font-size:48px;">{header}</p>""",
-                unsafe_allow_html=True)
+        st.markdown(f"""<p style="color:#E20023;font-size:48px;">{header}</p>""",
+                    unsafe_allow_html=True)
         
 def openai_config(application, provider):
 
