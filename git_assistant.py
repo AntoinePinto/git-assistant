@@ -26,20 +26,57 @@ if 'writer' not in st.session_state:
 
     st.session_state['expander_structure'] = True
 
+    st.session_state['init_expenses'] = st.session_state['envi'].gcloud.GCS.load('expenses.json')['value']
+    st.session_state['expenses'] = st.session_state['init_expenses']
+
+remaining_credit = 20 - st.session_state['expenses']
+
+st.markdown(f"""
+    <div style="position: fixed; bottom: 60px; right: 40px; width: 300px;">
+        <a href="https://www.buymeacoffee.com/antoinepinto">
+            <img src="https://github.com/PintoAntoine/ressources/blob/main/buy_me_a_coffee.png?raw=true" style="width: 300px;" />
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(f"""
+    <div style="position: fixed; bottom: 60px; left: 40px; width: 300px;">
+        <p>To enable exploration of the tool, $20 in OpenAI credit is available.</p>
+        <p style="font-size: 24px;">Remaining: <span style="color: green;">${remaining_credit:.2f}
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 col0, col1, col2 = st.columns([0.5, 1, 0.5])
 with col1:
     application = st.radio("Your generated README", ["Q&A Repository", "README Generator"], index=0, horizontal=True, label_visibility="collapsed")
 
-with st.expander(label='GitHub Repository URL', expanded=True):
+with st.expander(label='GitHub Repository URL | example: ***https://github.com/AntoinePinto/easyenvi***', expanded=True):
     repo_url = st.text_input("GitHub Repository URL", label_visibility='collapsed')
     st.session_state['REPO_TITLE'] = repo_url.split('/')[-1]
     submit_github_url = st.button('Submit')
 
 if submit_github_url:
+    
+    if 'messages' in st.session_state:
+        del st.session_state['messages']
+    
     with st.spinner('...'):
         st.session_state['gitty'] = git_assistant(repo_url=repo_url, folder=".", writer=st.session_state['writer'], progress_bar_func=stqdm)
-        st.session_state['gitty'].initialise(max_token=16000)
-        st.session_state['gitty'].get_global_summary()
+        output = st.session_state['gitty'].get_files_content()
+
+        if output is not None:
+            st.error(output)
+            del st.session_state['gitty']
+        else:
+            st.session_state['gitty'].initialise(max_token=16000)
+            st.session_state['gitty'].get_global_summary()
+            st.session_state['expenses'] = st.session_state['init_expenses'] + st.session_state['gitty'].writer.total_cost
+            st.session_state['envi'].gcloud.GCS.save({"value": st.session_state['expenses']}, 'expenses.json')
 
 if (application == "README Generator") & ("gitty" in st.session_state):
 
@@ -51,6 +88,8 @@ if (application == "README Generator") & ("gitty" in st.session_state):
             if gen_readme_structure:
                 with st.spinner('...'):
                     st.session_state['structure'] = st.session_state['gitty'].generate_readme_structure()
+                    st.session_state['expenses'] = st.session_state['init_expenses'] + st.session_state['gitty'].writer.total_cost
+                    st.session_state['envi'].gcloud.GCS.save({"value": st.session_state['expenses']}, 'expenses.json')
                 st.session_state['expander_structure'] = True
 
         if "structure" in st.session_state:
@@ -65,6 +104,8 @@ if (application == "README Generator") & ("gitty" in st.session_state):
                 if gen_readme_content:
                     with st.spinner('...'):
                         st.session_state['readme'] = st.session_state['gitty'].generate_readme(max_token=16000)
+                        st.session_state['expenses'] = st.session_state['init_expenses'] + st.session_state['writer'].total_cost
+                        st.session_state['envi'].gcloud.GCS.save({"value": st.session_state['expenses']}, 'expenses.json')
 
             if "readme" in st.session_state:
                 col0, col1, col2 = st.columns([0.5, 1, 0.5])
@@ -81,7 +122,7 @@ if (application == "README Generator") & ("gitty" in st.session_state):
 if (application == "Q&A Repository") & ("gitty" in st.session_state):
 
     if 'messages' not in st.session_state:
-        st.session_state['messages'] = [['assistant', "Ask a question about the repository."]]
+        st.session_state['messages'] = [['assistant', "**I am your git assistant.** Ask a question about the repository."]]
         st.session_state['gitty'].initialize_chatbot()
 
     for role, message in st.session_state['messages']:
@@ -98,15 +139,10 @@ if (application == "Q&A Repository") & ("gitty" in st.session_state):
 
         with st.spinner('...'):
             response = st.session_state['gitty'].chatbot_question(question=user_msg)
+            st.session_state['expenses'] = st.session_state['init_expenses'] + st.session_state['gitty'].writer.total_cost + st.session_state['gitty'].chatbot.total_cost
+            st.session_state['envi'].gcloud.GCS.save({"value": st.session_state['expenses']}, 'expenses.json')
 
         # Add and print assistant message
         st.session_state['messages'].append(['assistant', response])
         with st.chat_message('assistant', avatar=st.session_state['img']['assistant']):
             st.markdown(response, unsafe_allow_html=True)
-
-
-
-    
-
-
-

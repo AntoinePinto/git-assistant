@@ -9,6 +9,7 @@ __pycache__
 
 # images
 rsc/img/background.pptx
+rsc/img/imgs.pptx
 
 # dist
 build
@@ -18,3 +19,4 @@ setup.py
 git_assistant.ipynb
 business.docx
 trash
+
