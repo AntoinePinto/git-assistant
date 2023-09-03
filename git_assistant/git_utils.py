@@ -94,6 +94,8 @@ class git_assistant:
 
         self.files = {'content': {}}
         for filename in list_filenames:
+            if filename.startswith('.gitassistant/'):
+                continue
             self.files['content'][filename] = text_content(filename, file_max_nb_char)
 
     def initialise(self,
