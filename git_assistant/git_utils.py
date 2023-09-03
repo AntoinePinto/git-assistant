@@ -91,7 +91,6 @@ class git_assistant:
         else:
             repo = git.Repo('.')
             filenames = repo.git.ls_files().splitlines()
-            # filenames = subprocess.check_output("git ls-files", shell=True).splitlines()
             for filename in filenames:
                 list_filenames.append(filename)
 
@@ -103,6 +102,8 @@ class git_assistant:
 
         self.files = {'content': {}}
         for filename in list_filenames:
+            if filename.startswith('.gitassistant/'):
+                continue
             self.files['content'][filename] = text_content(filename, file_max_nb_char)
 
     def initialise(self,
@@ -187,7 +188,7 @@ class git_assistant:
         return self.readme
 
     def initialize_chatbot(self,
-                           context_template="You answer questions about the following repository. It is described by file.\n\nREPOSITORY FILES:\n```\n{summary_concat}\n```\n\nYour answer should be in HTML and highlighting with <strong> the important informations.\n"):
+                           context_template="You answer questions about the following repository. It is described by file.\n\nREPOSITORY FILES:\n```\n{summary_concat}\n```\n"):
 
         import copy
         self.chatbot = copy.deepcopy(self.writer)
