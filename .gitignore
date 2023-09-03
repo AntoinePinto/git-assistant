@@ -14,10 +14,12 @@ rsc/img/imgs.pptx
 
 # dist
 build
+dist
 git_assistant.egg-info
 setup.py
 
 git_assistant.ipynb
 business.docx
 trash
+.gitassistant
 
