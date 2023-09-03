@@ -34,6 +34,7 @@ git-assistant generate-readme
 For a remote repository, provide the `repo_url` parameter. For example:
 
 ```
+# example
 git-assistant generate-readme --repo_url=https://github.com/AntoinePinto/easyenvi
 ```
 
@@ -48,13 +49,36 @@ git-assistant chatbot
 For a chatbot linked to a remote repository, specify the `repo_url` parameter. For example:
 
 ```
+# example
 git-assistant chatbot --repo_url=https://github.com/AntoinePinto/easyenvi
 ```
 
-## Specify GPT model
+https://github.com/AntoinePinto/git-assistant/assets/76919407/659c5ac3-01ce-4891-8a89-96bd3d1979ea
+
+Note: Only files present in the git repository are used by Git Assistant. Files listed in `.gitignore` are not considered.
+
+## Extra features
+
+### Specify GPT model
 
 To select a specific GPT model, utilize the `gpt_model`` parameter. For example:
 
 ```
 git-assistant generate-readme --gpt_model=gpt-4-0613
+```
+
+### Push .gitassistant to simplify chatbot access for your repository visitors
+
+When you initialise Git Assistant on one of your projects, a `.gitassistant` folder is automatically created at the root of your repository. This folder contains the metadata required for the tool to function. By pushing the `.gitassistant` folder to your remote repository, you enable your visitors to access the ChatBot more conveniently, without the need to reinitialize git-assistant.
+
+You can also indicate in your README.md file that a chatbot is easily accessible by executing the commands:
+
+```
+pip install git-assistant
+```
+
+Then:
+
+```
+git-assistant chatbot --repo_url=<YOUR_REPO_URL>
 ```
