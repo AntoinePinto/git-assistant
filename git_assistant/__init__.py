@@ -118,12 +118,12 @@ def main():
 
         gitty.initialize_chatbot()
 
-        print("\n\033[1m(git-assistant)\033[0m: Hello, I am your git assistant, do you have a question about this repository?")
+        interact(f"Hello, I am your git assistant, do you have a question about this repository?")
 
         while True:
-            user_msg = input('\n\033[1m(user)\033[0m: Question: ')
+            user_msg = interact(f"Question: ", role='user', func=input)
             response = gitty.chatbot_question(question=user_msg)
-            print(f"\n\033[1m(git-assistant)\033[0m: {response}")
+            interact(response)
 
 if __name__ == "__main__":
     main()
