@@ -116,7 +116,7 @@ class git_assistant:
         for path, content in self.tqdm(self.files['content'].items()):
             prompt = prompt_template.format(content=content, max_word=max_token_files[path])
             self.writer.define_context(context=context)
-            response = self.writer.ask(message=prompt, temperature=0, request_timeout=30)
+            response = self.writer.ask(message=prompt, temperature=0, request_timeout=45)
             self.files['summary'][path] = response
             summary = response.replace('\n', '')
             self.summary_concat += f"File located in {path}: {summary}\n\n"
