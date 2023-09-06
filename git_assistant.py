@@ -54,7 +54,7 @@ col0, col1, col2 = st.columns([0.5, 1, 0.5])
 with col1:
     application = st.radio("Your generated README", ["Q&A Repository", "README Generator"], index=0, horizontal=True, label_visibility="collapsed")
 
-with st.expander(label='GitHub Repository URL | example: ***https://github.com/AntoinePinto/easyenvi***', expanded=True):
+with st.expander(label='GitHub Repository URL | example: ***https://github.com/AntoinePinto/string-pair-finder***', expanded=True):
     repo_url = st.text_input("GitHub Repository URL", label_visibility='collapsed')
     st.session_state['REPO_TITLE'] = repo_url.split('/')[-1]
     submit_github_url = st.button('Submit')
