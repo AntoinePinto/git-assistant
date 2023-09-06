@@ -61,7 +61,7 @@ Note: Only files present in the git repository are used by Git Assistant. Files 
 
 ### Specify GPT model
 
-To select a specific GPT model, utilize the `gpt_model`` parameter. For example:
+To select a specific GPT model, utilize the `gpt_model` parameter. For example:
 
 ```
 git-assistant generate-readme --gpt_model=gpt-4-0613
