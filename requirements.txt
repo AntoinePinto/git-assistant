@@ -8,6 +8,5 @@ nbformat==5.9.2
 numpy==1.24.4
 openai==0.27.7
 pillow==9.5.0
-screeninfo==0.8.1
 streamlit==1.24.1
 stqdm==0.0.5

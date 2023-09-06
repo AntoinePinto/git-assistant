@@ -4,7 +4,6 @@ import sys
 import streamlit as st
 
 from stqdm import stqdm
-from screeninfo import get_monitors
 
 sys.path.append('git_assistant')
 import llm
@@ -28,36 +27,27 @@ if 'expenses' not in st.session_state:
     st.session_state['init_expenses'] = st.session_state['envi'].gcloud.GCS.load('expenses.json')['value']
     st.session_state['expenses'] = st.session_state['init_expenses']
 
-    monitors = get_monitors()
-    primary_monitor = monitors[0]
-    if len(monitors) > 0:
-        st.session_state['laptop'] = primary_monitor.width > primary_monitor.height
-    else:
-        st.session_state['laptop'] = True
+remaining_credit = 20 - st.session_state['expenses']
 
-if st.session_state['laptop'] is True:
+st.markdown(f"""
+    <div style="position: fixed; bottom: 60px; right: 40px; width: 300px;">
+        <a href="https://www.buymeacoffee.com/antoinepinto">
+            <img src="https://github.com/PintoAntoine/ressources/blob/main/buy_me_a_coffee.png?raw=true" style="width: 300px;" />
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-    remaining_credit = 20 - st.session_state['expenses']
-
-    st.markdown(f"""
-        <div style="position: fixed; bottom: 60px; right: 40px; width: 300px;">
-            <a href="https://www.buymeacoffee.com/antoinepinto">
-                <img src="https://github.com/PintoAntoine/ressources/blob/main/buy_me_a_coffee.png?raw=true" style="width: 300px;" />
-            </a>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.markdown(f"""
-        <div style="position: fixed; bottom: 60px; left: 40px; width: 300px;">
-            <p>To enable exploration of the tool, $20 in OpenAI credit is available.</p>
-            <p style="font-size: 24px;">Remaining: <span style="color: green;">${remaining_credit:.2f}
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+st.markdown(f"""
+    <div style="position: fixed; bottom: 60px; left: 40px; width: 300px;">
+        <p>To enable exploration of the tool, $20 in OpenAI credit is available.</p>
+        <p style="font-size: 24px;">Remaining: <span style="color: green;">${remaining_credit:.2f}
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 col0, col1, col2 = st.columns([0.5, 1, 0.5])
 with col1:
