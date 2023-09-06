@@ -9,7 +9,7 @@ Git Assistant is a tool harnessing the power of generative AI to assist Git user
 
 Access to the git-assistant web interface: https://git-assistant.streamlit.app/
 
-https://github.com/AntoinePinto/git-assistant/assets/76919407/dd16f1d1-3066-49d3-947f-775af0819195
+https://github.com/AntoinePinto/git-assistant/assets/76919407/01ee8006-7609-4119-94d5-a4f49384c766
 
 ## Command line Interface
 
@@ -53,7 +53,7 @@ For a chatbot linked to a remote repository, specify the `repo_url` parameter. F
 git-assistant chatbot --repo_url=https://github.com/AntoinePinto/easyenvi
 ```
 
-https://github.com/AntoinePinto/git-assistant/assets/76919407/659c5ac3-01ce-4891-8a89-96bd3d1979ea
+https://github.com/AntoinePinto/git-assistant/assets/76919407/3d88ef92-394b-4c75-882d-f69f1eae293e
 
 Note: Only files present in the git repository are used by Git Assistant. Files listed in `.gitignore` are not considered.
 
