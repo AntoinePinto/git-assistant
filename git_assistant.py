@@ -30,20 +30,20 @@ if 'expenses' not in st.session_state:
 remaining_credit = 20 - st.session_state['expenses']
 
 st.markdown(f"""
-    <div style="position: fixed; bottom: 60px; right: 40px; width: 300px;">
-        <a href="https://www.buymeacoffee.com/antoinepinto">
-            <img src="https://github.com/PintoAntoine/ressources/blob/main/buy_me_a_coffee.png?raw=true" style="width: 300px;" />
-        </a>
+    <div style="position: fixed; bottom: 60px; left: 40px; width: 300px;">
+        <p>To enable exploration of the tool, $20 in OpenAI credit is available.</p>
+        <p style="font-size: 24px;">Remaining: <span style="color: green;">${remaining_credit:.2f}
+        </p>
     </div>
     """,
     unsafe_allow_html=True
 )
 
 st.markdown(f"""
-    <div style="position: fixed; bottom: 60px; left: 40px; width: 300px;">
-        <p>To enable exploration of the tool, $20 in OpenAI credit is available.</p>
-        <p style="font-size: 24px;">Remaining: <span style="color: green;">${remaining_credit:.2f}
-        </p>
+    <div style="position: fixed; bottom: 60px; right: 40px; width: 300px;">
+        <a href="https://www.buymeacoffee.com/antoinepinto">
+            <img src="https://github.com/PintoAntoine/ressources/blob/main/buy_me_a_coffee.png?raw=true" style="width: 300px;" />
+        </a>
     </div>
     """,
     unsafe_allow_html=True
