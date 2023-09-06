@@ -15,6 +15,7 @@ import streamlit_utils
 # Initialisation
 streamlit_utils.initialize_session_state()
 streamlit_utils.config_page_appearance(layout='centered')
+streamlit_utils.hide_header_footer()
 
 if 'expenses' not in st.session_state:
     provider = "PERSO"
