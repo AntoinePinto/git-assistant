@@ -1,6 +1,7 @@
 import os
 import sys
 
+import openai
 import streamlit as st
 
 from stqdm import stqdm
@@ -72,8 +73,12 @@ if submit_github_url:
             st.error(output)
             del st.session_state['gitty']
         else:
-            st.session_state['gitty'].initialise(max_token=16000)
-            st.session_state['gitty'].get_global_summary()
+            try:
+                st.session_state['gitty'].initialise(max_token=16000)
+                st.session_state['gitty'].get_global_summary()
+            except openai.error.Timeout:
+                st.error('openai.error.Timeout: The server seems to be overloaded. Please retry later.')
+
             st.session_state['expenses'] = st.session_state['init_expenses'] + st.session_state['gitty'].writer.total_cost
             st.session_state['envi'].gcloud.GCS.save({"value": st.session_state['expenses']}, 'expenses.json')
 
@@ -86,7 +91,10 @@ if (application == "README Generator") & ("gitty" in st.session_state):
             gen_readme_structure = st.button("Generate/Re-Generate README Structure")
             if gen_readme_structure:
                 with st.spinner('...'):
-                    st.session_state['structure'] = st.session_state['gitty'].generate_readme_structure()
+                    try:
+                        st.session_state['structure'] = st.session_state['gitty'].generate_readme_structure()
+                    except openai.error.Timeout:
+                        st.error('openai.error.Timeout: The server seems to be overloaded. Please retry later.')
                     st.session_state['expenses'] = st.session_state['init_expenses'] + st.session_state['gitty'].writer.total_cost
                     st.session_state['envi'].gcloud.GCS.save({"value": st.session_state['expenses']}, 'expenses.json')
                 st.session_state['expander_structure'] = True
@@ -102,7 +110,10 @@ if (application == "README Generator") & ("gitty" in st.session_state):
                 gen_readme_content = st.button("Generate/Re-Generate README Content")
                 if gen_readme_content:
                     with st.spinner('...'):
-                        st.session_state['readme'] = st.session_state['gitty'].generate_readme(max_token=16000)
+                        try:
+                            st.session_state['readme'] = st.session_state['gitty'].generate_readme(max_token=16000)
+                        except openai.error.Timeout:
+                            st.error('openai.error.Timeout: The server seems to be overloaded. Please retry later.')
                         st.session_state['expenses'] = st.session_state['init_expenses'] + st.session_state['writer'].total_cost
                         st.session_state['envi'].gcloud.GCS.save({"value": st.session_state['expenses']}, 'expenses.json')
 
@@ -137,7 +148,10 @@ if (application == "Q&A Repository") & ("gitty" in st.session_state):
             st.markdown(user_msg, unsafe_allow_html=True)
 
         with st.spinner('...'):
-            response = st.session_state['gitty'].chatbot_question(question=user_msg)
+            try:
+                response = st.session_state['gitty'].chatbot_question(question=user_msg)
+            except openai.error.Timeout:
+                st.error('openai.error.Timeout: The server seems to be overloaded. Please retry later.')
             st.session_state['expenses'] = st.session_state['init_expenses'] + st.session_state['gitty'].writer.total_cost + st.session_state['gitty'].chatbot.total_cost
             st.session_state['envi'].gcloud.GCS.save({"value": st.session_state['expenses']}, 'expenses.json')
 
