@@ -3,10 +3,10 @@ import json
 import os
 import sys
 
+from PIL import Image
+
 import streamlit as st
 import openai
-
-from PIL import Image
 
 from easyenvi import EasyEnvironment
 
@@ -49,9 +49,6 @@ def initialize_session_state():
 
     if 'img' not in st.session_state:
 
-        if not check_password():
-            sys.exit()
-
         st.session_state['img'] = {
             'tab_logo': 'rsc/img/tab_logo.png',
             'background': 'rsc/img/background.png',
@@ -62,7 +59,6 @@ def initialize_session_state():
         with open('rsc/credentials/GCP_credentials.json', 'w') as fp:
             json.dump(dict(st.secrets["GOOGLE_APPLICATION_CREDENTIALS"]), fp)
 
-
         st.session_state['envi'] = EasyEnvironment(
             local_path='',
             
@@ -70,9 +66,6 @@ def initialize_session_state():
             gcloud_credential_path="rsc/credentials/GCP_credentials.json",
             GCS_path='gs://my-gcp-project-gcs-bucket/git-assistant/'
         )
-
-
-
 
 def config_page_appearance(header=None, layout='wide'):
     st.set_page_config(page_title="Git Assistant", page_icon = Image.open(st.session_state['img']['tab_logo']), layout=layout)
