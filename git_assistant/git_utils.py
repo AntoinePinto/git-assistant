@@ -94,11 +94,11 @@ class git_assistant:
             for filename in filenames:
                 list_filenames.append(filename)
 
-        if len(list_filenames) > n_max_file:
-            return f"This repository contains too many files ({len(list_filenames)} readable files). To avoid exceeding the tool's expenditure, please use a smaller repository."
+        # if len(list_filenames) > n_max_file:
+        #     return f"This repository contains too many files ({len(list_filenames)} readable files). To avoid exceeding the tool's expenditure, please use a smaller repository."
         
         if len(list_filenames) == 0:
-            return "There is no easy-readable file (convertible to text) in this repository"
+            return "There is no easy-readable file (convertible to text) in this repository."
 
         self.files = {'content': {}}
         for filename in list_filenames:

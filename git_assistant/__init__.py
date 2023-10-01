@@ -60,7 +60,7 @@ def main():
     output = gitty.get_files_content()
 
     if output is not None:
-        raise output
+        raise ValueError(output)
 
     local_path = gitty.folder + '/.gitassistant'
     if not os.path.exists(local_path):
