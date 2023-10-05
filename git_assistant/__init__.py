@@ -43,12 +43,6 @@ def main():
     if gpt_model is None:
         gpt_model = "gpt-3.5-turbo-16k-0613"
 
-    # provider = "VA"
-    # for k, v in st.secrets['OPEN_AI'][provider].items():
-    #     os.environ[k] = v
-    # llm.set_openai_environment('CHAT_GPT')
-    # writer = llm.ChatGPT(model=gpt_model, azure_engine=True)
-
     if (args.repo_url is None) & (not is_git_repo('.')):
         raise "You are not in the root of a .git repository."
 
@@ -88,7 +82,7 @@ def main():
             gitty.summary_concat = metadata['content']
 
     if initialise == "Y":
-        interact(f"Initialising...")
+        interact(message=f"{len(gitty.files['content'])} readable files in this repository. Each file's contents will be inputted into a prompt.")
         gitty.initialise(max_token=16000)
         metadata = {'content': gitty.summary_concat, 'last_update': datetime.now()}
         env.local.save(metadata, 'metadata.pickle')
