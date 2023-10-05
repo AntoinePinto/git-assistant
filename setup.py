@@ -14,7 +14,7 @@ setup(
     install_requires=[
         "easyenvi==1.0.4", 
         "fsspec==2023.6.0",
-        "GitPython==3.1.32",
+        "gitpython>=3.1.35",
         "nbconvert==7.8.0",
         "nbformat==5.9.2",  
         "numpy==1.24.4",   
